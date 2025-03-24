@@ -4,6 +4,7 @@ package com.cloudnote.spring.demo.service.impl;
 
 
 import com.cloudnote.spring.demo.Repository.NoteRepository;
+
 import com.cloudnote.spring.demo.model.Note;
 import com.cloudnote.spring.demo.service.NoteService;
 import org.springframework.beans.factory.annotation.Autowired;
