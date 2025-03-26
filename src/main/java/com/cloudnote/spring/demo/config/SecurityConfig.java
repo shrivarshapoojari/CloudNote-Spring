@@ -7,6 +7,9 @@ import com.cloudnote.spring.demo.Repository.UserRepository;
 import com.cloudnote.spring.demo.model.AppRole;
 import com.cloudnote.spring.demo.model.Role;
 import com.cloudnote.spring.demo.model.User;
+import com.cloudnote.spring.demo.security.jwt.AuthEntryPointJwt;
+import com.cloudnote.spring.demo.security.jwt.AuthTokenFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,14 +35,33 @@ securedEnabled = true,
 jsr250Enabled = true)
 public class SecurityConfig {
 
+
+    @Autowired
+    private AuthEntryPointJwt unauthorizedHandler;
+
+    @Bean
+    public AuthTokenFilter authenticationJwtTokenFilter(){
+        return  new AuthTokenFilter();
+    }
+
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests((requests) -> requests.anyRequest().authenticated());
+        http.authorizeHttpRequests((requests) ->
+                 requests
+                         .requestMatchers(("/api/auth/public/**")).permitAll()
+                         .anyRequest().authenticated()
+
+                );
+
         http.csrf(AbstractHttpConfigurer::disable);
+        http.exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler));
+        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+
+
         //http.formLogin(withDefaults());
 //        http.addFilterBefore(new CustomLoggingFilter(), UsernamePasswordAuthenticationFilter.class);
 //        http.addFilterAfter(new RequestValidationFilter(), CustomLoggingFilter.class);
-        http.httpBasic(withDefaults());
+//        http.httpBasic(withDefaults());
         return http.build();
     }
 
