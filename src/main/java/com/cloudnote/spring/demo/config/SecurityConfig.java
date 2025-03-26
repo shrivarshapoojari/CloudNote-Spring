@@ -35,8 +35,8 @@ public class SecurityConfig {
         http.authorizeHttpRequests((requests) -> requests.anyRequest().authenticated());
         http.csrf(AbstractHttpConfigurer::disable);
         //http.formLogin(withDefaults());
-        http.addFilterBefore(new CustomLoggingFilter(), UsernamePasswordAuthenticationFilter.class);
-        http.addFilterAfter(new RequestValidationFilter(), UsernamePasswordAuthenticationFilter.class);
+//        http.addFilterBefore(new CustomLoggingFilter(), UsernamePasswordAuthenticationFilter.class);
+//        http.addFilterAfter(new RequestValidationFilter(), CustomLoggingFilter.class);
         http.httpBasic(withDefaults());
         return http.build();
     }
