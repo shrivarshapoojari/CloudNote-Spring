@@ -48,7 +48,7 @@ public class SecurityConfig {
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((requests) ->
                  requests
-                         .requestMatchers(("/api/auth/public/**")).permitAll()
+                         .requestMatchers(("/api/auth/public/login")).permitAll()
                          .anyRequest().authenticated()
 
                 );
@@ -58,10 +58,7 @@ public class SecurityConfig {
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
 
-        //http.formLogin(withDefaults());
-//        http.addFilterBefore(new CustomLoggingFilter(), UsernamePasswordAuthenticationFilter.class);
-//        http.addFilterAfter(new RequestValidationFilter(), CustomLoggingFilter.class);
-//        http.httpBasic(withDefaults());
+
         return http.build();
     }
 

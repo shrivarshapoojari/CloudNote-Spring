@@ -29,7 +29,7 @@ public class AuthController {
 
     @Autowired
     AuthenticationManager authenticationManager;
-    @PostMapping("/public/signin")
+    @PostMapping("/public/login")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
         Authentication authentication;
         try {
