@@ -150,7 +150,9 @@ public class AuthController {
                 user.isTwoFactorEnabled(),
                 roles
         );
-
+        System.out.println("______________________________________________________________________________");
+            System.out.println(response);
+        System.out.println("______________________________________________________________________________");
         return ResponseEntity.ok().body(response);
     }
 
