@@ -22,9 +22,9 @@ public class PasswordResetToken {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private boolean used;
-
     private User user;
+
+    private boolean used;
 
     public PasswordResetToken(String token, Instant expiryDate, User user) {
         this.token = token;

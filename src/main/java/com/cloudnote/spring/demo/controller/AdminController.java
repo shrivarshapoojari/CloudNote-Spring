@@ -84,16 +84,6 @@ public class AdminController {
     }
 
 
-    @PostMapping("/public/forgot-password")
-    public ResponseEntity<?> forgotPassword(@RequestParam String email){
-        try{
-            userService.generatePasswordResetToken(email);
-            return ResponseEntity.ok(new MessageResponse("Password reset email sent!"));
-        } catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new MessageResponse("Error sending password reset email"));
-        }
 
-    }
 
 }
