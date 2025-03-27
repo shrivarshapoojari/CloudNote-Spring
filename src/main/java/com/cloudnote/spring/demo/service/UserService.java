@@ -14,4 +14,15 @@ public interface UserService {
 
 
     User findByUsername(String username);
+
+    public void updatePassword(Long userId, String password);
+
+    public void updateAccountLockStatus(Long userId, boolean lock);
+
+    public void updateAccountExpiryStatus(Long userId, boolean expire);
+
+    public void updateAccountEnabledStatus(Long userId, boolean enabled);
+
+    public void updateCredentialsExpiryStatus(Long userId, boolean expire);
+
 }
