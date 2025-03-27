@@ -24,5 +24,6 @@ public interface UserService {
     public void updateAccountEnabledStatus(Long userId, boolean enabled);
 
     public void updateCredentialsExpiryStatus(Long userId, boolean expire);
+    void generatePasswordResetToken(String email) throws  Exception;
 
 }

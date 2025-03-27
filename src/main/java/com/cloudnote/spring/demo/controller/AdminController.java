@@ -3,6 +3,7 @@ package com.cloudnote.spring.demo.controller;
 
 
 import com.cloudnote.spring.demo.Repository.RoleRepository;
+import com.cloudnote.spring.demo.dto.MessageResponse;
 import com.cloudnote.spring.demo.dto.UserDTO;
 import com.cloudnote.spring.demo.model.Role;
 import com.cloudnote.spring.demo.model.User;
@@ -83,6 +84,16 @@ public class AdminController {
     }
 
 
+    @PostMapping("/public/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestParam String email){
+        try{
+            userService.generatePasswordResetToken(email);
+            return ResponseEntity.ok(new MessageResponse("Password reset email sent!"));
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new MessageResponse("Error sending password reset email"));
+        }
 
+    }
 
 }

@@ -1,18 +1,24 @@
 package com.cloudnote.spring.demo.service.impl;
 
+import com.cloudnote.spring.demo.Repository.PasswordResetTokenRepository;
 import com.cloudnote.spring.demo.Repository.RoleRepository;
 import com.cloudnote.spring.demo.Repository.UserRepository;
 import com.cloudnote.spring.demo.dto.UserDTO;
 import com.cloudnote.spring.demo.model.AppRole;
+import com.cloudnote.spring.demo.model.PasswordResetToken;
 import com.cloudnote.spring.demo.model.Role;
 import com.cloudnote.spring.demo.model.User;
 import com.cloudnote.spring.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -20,8 +26,14 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserRepository userRepository;
 
+    @Value("${frontend.url}")
+    private String frontendUrl;
+
     @Autowired
     RoleRepository roleRepository;
+
+    @Autowired
+    PasswordResetTokenRepository passwordResetTokenRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -119,5 +131,20 @@ public class UserServiceImpl implements UserService {
         user.setCredentialsNonExpired(!expire);
         userRepository.save(user);
     }
+    @Override
+    public void generatePasswordResetToken(String email)  throws Exception{
+        User user = userRepository.findByEmail(email).orElseThrow(()
+                -> new RuntimeException("User not found"));
+
+
+        String token = UUID.randomUUID().toString();
+        Instant expiryDate = Instant.now().plus(24, ChronoUnit.HOURS);
+        PasswordResetToken resetToken = new PasswordResetToken(token, expiryDate, user);
+        passwordResetTokenRepository.save(resetToken);
+
+        String resetUrl = frontendUrl + "/reset-password?token=" + token;
+        // Send email to user
+    }
+}
 
 }
