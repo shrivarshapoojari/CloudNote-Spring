@@ -9,6 +9,7 @@ import com.cloudnote.spring.demo.model.PasswordResetToken;
 import com.cloudnote.spring.demo.model.Role;
 import com.cloudnote.spring.demo.model.User;
 import com.cloudnote.spring.demo.service.UserService;
+import com.cloudnote.spring.demo.utils.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,6 +26,10 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserRepository userRepository;
+
+
+    @Autowired
+    EmailService emailService;
 
     @Value("${frontend.url}")
     private String frontendUrl;
@@ -143,7 +148,9 @@ public class UserServiceImpl implements UserService {
         passwordResetTokenRepository.save(resetToken);
 
         String resetUrl = frontendUrl + "/reset-password?token=" + token;
-        // Send email to user
+
+        emailService.sendPasswordResetEmail(email,resetUrl);
+
     }
 }
 
