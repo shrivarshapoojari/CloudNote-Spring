@@ -52,7 +52,10 @@ public class SecurityConfig {
                          .requestMatchers(("/api/auth/public/**")).permitAll()
                          .anyRequest().authenticated()
 
-                );
+                ).oauth2Login(oauth->{
+
+                        });
+
          http.cors();
         http.csrf(AbstractHttpConfigurer::disable);
         http.exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler));
