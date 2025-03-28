@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -40,6 +41,9 @@ public class SecurityConfig {
     @Autowired
     private AuthEntryPointJwt unauthorizedHandler;
 
+    @Autowired
+            @Lazy
+    OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter(){
         return  new AuthTokenFilter();
@@ -53,7 +57,7 @@ public class SecurityConfig {
                          .anyRequest().authenticated()
 
                 ).oauth2Login(oauth->{
-
+                            oauth.successHandler(oAuth2LoginSuccessHandler);
                         });
 
          http.cors();

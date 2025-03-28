@@ -66,6 +66,13 @@ public class UserServiceImpl implements UserService {
         return convertToDto(user);
     }
 
+    @Override
+    public Optional<User> findByEmail(String email) {
+
+        Optional<User> user=userRepository.findByEmail(email);
+        return  user;
+    }
+
     private UserDTO convertToDto(User user) {
         return new UserDTO(
                 user.getUserId(),
@@ -171,6 +178,17 @@ public class UserServiceImpl implements UserService {
         resetToken.setUsed(true);
         passwordResetTokenRepository.save(resetToken);
     }
+
+    @Override
+    public void registerUser(User user){
+        if(user.getPassword()!=null)
+        {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+        userRepository.save(user);
+    }
+
+
 }
 
 

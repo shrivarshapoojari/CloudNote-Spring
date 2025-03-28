@@ -4,6 +4,7 @@ import com.cloudnote.spring.demo.dto.UserDTO;
 import com.cloudnote.spring.demo.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
     void updateUserRole(Long userId, String roleName);
@@ -12,7 +13,7 @@ public interface UserService {
 
     UserDTO getUserById(Long id);
 
-
+     Optional<User> findByEmail(String email);
     User findByUsername(String username);
 
     public void updatePassword(Long userId, String password);
@@ -27,5 +28,7 @@ public interface UserService {
     void generatePasswordResetToken(String email) throws  Exception;
 
     void resetPassword(String token, String newPassword);
+
+    void registerUser(User user);
 
 }
