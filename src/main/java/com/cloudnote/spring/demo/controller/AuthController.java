@@ -214,6 +214,35 @@ public class AuthController {
         return ResponseEntity.ok(qrCodeUrl);
 
     }
+    @PostMapping("/disable-2fa")
+    public ResponseEntity<String>disable2FA() throws Exception {
+        Long userId= authUtil.loggedInUserId();
+        userService.disable2FA(userId);
+
+
+        return ResponseEntity.ok("2FA Disabled");
+
+    }
+
+    @PostMapping("/verify-2fa")
+    public ResponseEntity<String>verify2FA(@RequestParam int code) throws Exception {
+        Long userId= authUtil.loggedInUserId();
+       boolean isValid=userService.validate2FACode(userId,code);
+       if(isValid)
+       {
+           userService.enable2FA(userId);
+           return  ResponseEntity.ok("2FA verified");
+       }
+       else{
+           return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                   .body("INVALID 2FA CODE");
+       }
+
+
+
+
+    }
+
 
 
 
