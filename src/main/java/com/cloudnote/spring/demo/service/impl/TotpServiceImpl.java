@@ -29,7 +29,7 @@ public class TotpServiceImpl implements TotpService {
     @Override
     public String getQrCodeUrl(GoogleAuthenticatorKey secret, String username)
     {
-        return GoogleAuthenticatorQRGenerator.getOtpAuthTotpURL("CloudNotes",username,secret);
+        return GoogleAuthenticatorQRGenerator.getOtpAuthURL("CloudNotes",username,secret);
     }
 
     @Override

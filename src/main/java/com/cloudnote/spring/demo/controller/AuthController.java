@@ -23,6 +23,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.authentication.AuthenticationManager;
+
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -72,7 +75,9 @@ public class AuthController {
 
 //      set the authentication
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
+        System.out.println(("----------------------------------------------------AUTH"));
+        System.out.println(authentication);
+        System.out.println(("----------------------------------------------------AUTH"));
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
 
@@ -208,13 +213,16 @@ public class AuthController {
     public ResponseEntity<String>enable2FA() throws Exception {
         Long userId= authUtil.loggedInUserId();
         GoogleAuthenticatorKey secret=userService.generate2FASecret(userId);
-
+        System.out.println("QR CODE____________________________________________________");
         String  qrCodeUrl= totpService.getQrCodeUrl(secret,userService.getUserById(userId).getUserName());
-
+        System.out.println(qrCodeUrl);
+       System.out.println("QR CODE____________________________________________________");
 
         return ResponseEntity.ok(qrCodeUrl);
 
     }
+
+
     @PostMapping("/disable-2fa")
     public ResponseEntity<String>disable2FA() throws Exception {
         Long userId= authUtil.loggedInUserId();
