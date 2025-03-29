@@ -5,7 +5,10 @@ import com.cloudnote.spring.demo.dto.*;
 import com.cloudnote.spring.demo.model.Role;
 import com.cloudnote.spring.demo.model.User;
 import com.cloudnote.spring.demo.security.jwt.JwtUtils;
+import com.cloudnote.spring.demo.service.TotpService;
 import com.cloudnote.spring.demo.service.UserService;
+import com.cloudnote.spring.demo.utils.AuthUtil;
+import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,6 +35,12 @@ import com.cloudnote.spring.demo.model.AppRole;
 public class AuthController {
     @Autowired
     JwtUtils jwtUtils;
+
+    @Autowired
+    AuthUtil authUtil;
+
+    @Autowired
+    TotpService totpService;
 
     @Autowired
     PasswordEncoder encoder;
@@ -192,6 +201,21 @@ public class AuthController {
                     .body(new MessageResponse(e.getMessage()));
         }
     }
+
+
+    @PostMapping("/enable-2fa")
+    public ResponseEntity<String>enable2FA() throws Exception {
+        Long userId= authUtil.loggedInUserId();
+        GoogleAuthenticatorKey secret=userService.generate2FASecret(userId);
+
+        String  qrCodeUrl= totpService.getQrCodeUrl(secret,userService.getUserById(userId).getUserName());
+
+
+        return ResponseEntity.ok(qrCodeUrl);
+
+    }
+
+
 
 
 
