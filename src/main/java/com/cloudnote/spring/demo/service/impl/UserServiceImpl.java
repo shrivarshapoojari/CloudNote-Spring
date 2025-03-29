@@ -208,17 +208,28 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    public boolean validate2FACode(Long userId,int code)
+    @Override
+    public boolean validate2FACode(Long userId, int code)
     {
 
+        User user=userRepository.findById(userId).orElseThrow(()-> new RuntimeException("User not found"));
+        return  totpService.verifyCode(user.getTwoFactorSecret(),code);
     }
 
-    public  void  enable2FA(Long userId)
+    @Override
+    public void  enable2FA(Long userId)
     {
-
+        User user=userRepository.findById(userId).orElseThrow(()-> new RuntimeException("User not found"));
+        user.setTwoFactorEnabled(true);
+        userRepository.save(user);
     }
-     public  void disable2FA(Long userId)
+
+    @Override
+    public void disable2FA(Long userId)
      {
+         User user=userRepository.findById(userId).orElseThrow(()-> new RuntimeException("User not found"));
+         user.setTwoFactorEnabled(false);
+         userRepository.save(user);
 
      }
 
