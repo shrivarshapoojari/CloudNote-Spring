@@ -2,6 +2,7 @@ package com.cloudnote.spring.demo.service;
 
 import com.cloudnote.spring.demo.dto.UserDTO;
 import com.cloudnote.spring.demo.model.User;
+import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,4 +32,5 @@ public interface UserService {
 
     void registerUser(User user);
 
+    GoogleAuthenticatorKey generate2FASecret(Long userId);
 }

@@ -8,8 +8,10 @@ import com.cloudnote.spring.demo.model.AppRole;
 import com.cloudnote.spring.demo.model.PasswordResetToken;
 import com.cloudnote.spring.demo.model.Role;
 import com.cloudnote.spring.demo.model.User;
+import com.cloudnote.spring.demo.service.TotpService;
 import com.cloudnote.spring.demo.service.UserService;
 import com.cloudnote.spring.demo.utils.EmailService;
+import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -42,6 +44,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    TotpService totpService;
+
+
+
     @Override
     public void updateUserRole(Long userId, String roleName) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
@@ -188,6 +196,31 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Override
+    public GoogleAuthenticatorKey generate2FASecret(Long userId)
+    {
+        User user=userRepository.findById(userId).orElseThrow(()-> new RuntimeException("User not found"));
+
+        GoogleAuthenticatorKey key=totpService.generateSecret();
+        user.setTwoFactorSecret(key.getKey());
+        userRepository.save(user);
+        return key;
+
+    }
+
+    public boolean validate2FACode(Long userId,int code)
+    {
+
+    }
+
+    public  void  enable2FA(Long userId)
+    {
+
+    }
+     public  void disable2FA(Long userId)
+     {
+
+     }
 
 }
 
