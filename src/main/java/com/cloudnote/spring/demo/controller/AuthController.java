@@ -7,6 +7,7 @@ import com.cloudnote.spring.demo.model.User;
 import com.cloudnote.spring.demo.security.jwt.JwtUtils;
 import com.cloudnote.spring.demo.service.TotpService;
 import com.cloudnote.spring.demo.service.UserService;
+import com.cloudnote.spring.demo.service.impl.UserDetailsImpl;
 import com.cloudnote.spring.demo.utils.AuthUtil;
 import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
 import jakarta.validation.Valid;
@@ -72,7 +73,7 @@ public class AuthController {
 //      set the authentication
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
 
         String jwtToken = jwtUtils.generateTokenFromUsername(userDetails);
@@ -225,22 +226,56 @@ public class AuthController {
     }
 
     @PostMapping("/verify-2fa")
-    public ResponseEntity<String>verify2FA(@RequestParam int code) throws Exception {
-        Long userId= authUtil.loggedInUserId();
-       boolean isValid=userService.validate2FACode(userId,code);
-       if(isValid)
-       {
-           userService.enable2FA(userId);
-           return  ResponseEntity.ok("2FA verified");
-       }
-       else{
-           return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                   .body("INVALID 2FA CODE");
-       }
+    public ResponseEntity<String>verify2FA(@RequestParam int code) throws Exception
+    {
+        Long userId = authUtil.loggedInUserId();
+        boolean isValid = userService.validate2FACode(userId, code);
+        if (isValid)
+        {
+            userService.enable2FA(userId);
+            return ResponseEntity.ok("2FA verified");
+        } else
+        {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("INVALID 2FA CODE");
+        }
+    }
 
 
 
 
+    @GetMapping("/user/2fa-status")
+    public ResponseEntity<?>get2FAStatus() throws Exception {
+        User user=authUtil.loggedInUser();
+
+        if(user!=null)
+        {
+            return ResponseEntity.ok().body(Map.of("is2faEnabled",user.isTwoFactorEnabled()));
+        }
+        else{
+            throw new Exception("User not found");
+        }
+
+    }
+
+    @PostMapping("/public/verify-2fa-login")
+    public ResponseEntity<String> verify2FALogin(@RequestParam int code,
+                                                 @RequestParam String jwtToken
+                                                 )
+    {
+        String username=jwtUtils.getUserNameFromJwtToken(jwtToken);
+        User user=userService.findByUsername(username);
+
+        boolean isValid = userService.validate2FACode(user.getUserId(), code);
+        if (isValid)
+        {
+
+            return ResponseEntity.ok("2FA verified");
+        } else
+        {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("INVALID 2FA CODE");
+        }
     }
 
 
