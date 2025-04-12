@@ -29,4 +29,37 @@ public class UserRepositoryTest {
         Optional<User> found=userRepository.findByUserName("shrivarsha");
         assertTrue(found.isPresent());
     }
+    @Test
+    @DisplayName("Should find user by email")
+    void testFindByEmail() {
+        User user = new User("varsha", "varsha@gmail.com", "password123");
+        userRepository.save(user);
+
+        Optional<User> found = userRepository.findByEmail("varsha@gmail.com");
+
+        assertTrue(found.isPresent());
+        assertEquals("varsha", found.get().getUserName());
+    }
+
+    @Test
+    @DisplayName("Should return true if email exists")
+    void testExistsByEmail() {
+        User user = new User("aishu", "aishu@gmail.com", "pass");
+        userRepository.save(user);
+
+        boolean exists = userRepository.existsByEmail("aishu@gmail.com");
+
+        assertTrue(exists);
+    }
+
+    @Test
+    @DisplayName("Should return true if username exists")
+    void testExistsByUserName() {
+        User user = new User("ravi", "ravi@gmail.com", "pass");
+        userRepository.save(user);
+
+        boolean exists = userRepository.existsByUserName("ravi");
+
+        assertTrue(exists);
+    }
 }
