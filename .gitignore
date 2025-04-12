@@ -4,7 +4,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 src/main/resources/application.properties
-
+src/main/resources/application-prod.properties
+src/main/resources/application-dev.properties
+src/test/resources/application.properties
 
 ### STS ###
 .apt_generated
@@ -20,7 +22,7 @@ src/main/resources/application.properties
 *.iws
 *.iml
 *.ipr
-
+.env
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
